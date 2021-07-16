@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: mywallet
+      PMA_PASSWORD: mywallet
+    ports:
+      - 8080:80
+  db:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: mywallet
+      MYSQL_PASSWORD: mywallet
+      MYSQL_DATABASE: mywallet
+      MYSQL_ROOT_PASSWORD: mywallet
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;' --innodb-flush-log-at-trx-commit=0
+  backend:
+    restart: always
+    build: ./
+    container_name: mywallet-backend
+    hostname: mywallet-backend
+    depends_on:
+      - db
+    ports:
+      - 8081:8081
+    environment:
+      DB_USER: mywallet
+      DB_PASSWORD: mywallet
+      DB_HOST: db
+      DB_PORT: 3306
