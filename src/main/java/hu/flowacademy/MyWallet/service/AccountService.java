@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
@@ -24,7 +26,13 @@ public class AccountService {
                 .balance(createAccountDTO.getBalance())
                 .build());
 
-            log.debug("Created an account with this id: {}", createdAccount.getId());
+        log.debug("Created an account with this id: {}", createdAccount.getId());
         return createdAccount;
+    }
+
+    public List<Account> getAllAccounts() {
+        List<Account> allAccount = accountRepository.findAll();
+        log.debug("Get ({}) account.", allAccount.size());
+        return allAccount;
     }
 }

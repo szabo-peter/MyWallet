@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/api/accounts")
 public class AccountController {
 
     private final AccountService accountService;
@@ -20,8 +22,14 @@ public class AccountController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createAccount(@RequestBody CreateAccountDTO createAccountDTO){
-        log.debug("Creating an account with these params: {}",createAccountDTO);
+    public Account createAccount(@RequestBody CreateAccountDTO createAccountDTO) {
+        log.debug("Creating an account with these params: {}", createAccountDTO);
         return accountService.createAccount(createAccountDTO);
+    }
+
+    @GetMapping("")
+    public List<Account> getAllAccounts() {
+        log.debug("Get all account.");
+        return accountService.getAllAccounts();
     }
 }
