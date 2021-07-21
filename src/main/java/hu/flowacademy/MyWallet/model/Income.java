@@ -1,5 +1,6 @@
 package hu.flowacademy.MyWallet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,9 @@ public class Income {
     private IncomeCategory incomeCategory;
     private LocalDateTime incomeTime;
     @ManyToOne
+    @JsonIgnore
     private Account account;
+    private double amount;
+
 
 }

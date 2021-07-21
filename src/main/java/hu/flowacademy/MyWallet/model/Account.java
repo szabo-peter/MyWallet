@@ -27,6 +27,7 @@ public class Account {
     private List<Expense> expenses;
     @OneToMany(mappedBy = "account")
     private List<Income> incomes;
+    private double balance;
 
 }
 
