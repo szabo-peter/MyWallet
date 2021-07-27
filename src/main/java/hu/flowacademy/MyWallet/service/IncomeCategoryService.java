@@ -37,9 +37,10 @@ public class IncomeCategoryService {
         log.info("Found ({}) expenseCategories", allIncomeCategory.size());
         return allIncomeCategory;
     }
+
     private void validate(String name) {
         log.info("Validating IncomeCategory name.");
-        if(!StringUtils.hasText(name)){
+        if (!StringUtils.hasText(name)) {
             throw new ValidationException("Income Category needs a name!");
         }
     }

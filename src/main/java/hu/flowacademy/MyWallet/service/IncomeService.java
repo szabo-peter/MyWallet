@@ -1,6 +1,5 @@
 package hu.flowacademy.MyWallet.service;
 
-import hu.flowacademy.MyWallet.dto.CreateExpenseDTO;
 import hu.flowacademy.MyWallet.dto.CreateIncomeDTO;
 import hu.flowacademy.MyWallet.exception.MissingIDException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
@@ -55,18 +54,19 @@ public class IncomeService {
         log.info("Found ({}) incomes.", allIncomes.size());
         return allIncomes;
     }
+
     private void validate(CreateIncomeDTO createIncomeDTO) {
         log.info("Validating createExpenseDTO.");
-        if(!StringUtils.hasText(createIncomeDTO.getIncomeCategoryID())){
+        if (!StringUtils.hasText(createIncomeDTO.getIncomeCategoryID())) {
             throw new ValidationException("Income needs a category ID!");
         }
-        if(!StringUtils.hasText(createIncomeDTO.getAccountID())){
+        if (!StringUtils.hasText(createIncomeDTO.getAccountID())) {
             throw new ValidationException("Income needs an account ID!");
         }
-        if(!StringUtils.hasText(createIncomeDTO.getName())){
+        if (!StringUtils.hasText(createIncomeDTO.getName())) {
             throw new ValidationException("Income needs a name!");
         }
-        if(createIncomeDTO.getAmount()<=0){
+        if (createIncomeDTO.getAmount() <= 0) {
             throw new ValidationException("Income amount must be greater than 0!");
         }
     }

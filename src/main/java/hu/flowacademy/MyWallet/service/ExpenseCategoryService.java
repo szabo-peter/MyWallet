@@ -40,7 +40,7 @@ public class ExpenseCategoryService {
 
     private void validate(String name) {
         log.info("Validating ExpenseCategory name.");
-        if(!StringUtils.hasText(name)){
+        if (!StringUtils.hasText(name)) {
             throw new ValidationException("Expense Category needs a name!");
         }
     }

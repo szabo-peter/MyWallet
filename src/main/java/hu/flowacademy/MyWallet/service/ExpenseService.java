@@ -58,16 +58,16 @@ public class ExpenseService {
 
     private void validate(CreateExpenseDTO createExpenseDTO) {
         log.info("Validating createExpenseDTO.");
-        if(!StringUtils.hasText(createExpenseDTO.getExpenseCategoryID())){
+        if (!StringUtils.hasText(createExpenseDTO.getExpenseCategoryID())) {
             throw new ValidationException("Expense needs a category ID!");
         }
-        if(!StringUtils.hasText(createExpenseDTO.getAccountID())){
+        if (!StringUtils.hasText(createExpenseDTO.getAccountID())) {
             throw new ValidationException("Expense needs an account ID!");
         }
-        if(!StringUtils.hasText(createExpenseDTO.getName())){
+        if (!StringUtils.hasText(createExpenseDTO.getName())) {
             throw new ValidationException("Expense needs a name!");
         }
-        if(createExpenseDTO.getAmount()<=0){
+        if (createExpenseDTO.getAmount() <= 0) {
             throw new ValidationException("Expense amount must be greater than 0!");
         }
     }

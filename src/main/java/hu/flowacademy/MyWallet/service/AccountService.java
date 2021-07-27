@@ -43,10 +43,10 @@ public class AccountService {
 
     private void validate(CreateAccountDTO createAccountDTO) {
         log.info("Validating createAccountDTO.");
-        if(!StringUtils.hasText(createAccountDTO.getName())){
+        if (!StringUtils.hasText(createAccountDTO.getName())) {
             throw new ValidationException("Account needs a name!");
         }
-        if(createAccountDTO.getBalance()<=0){
+        if (createAccountDTO.getBalance() <= 0) {
             throw new ValidationException("Account Balance must be greater than 0");
         }
     }
