@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Data
@@ -22,11 +19,13 @@ public class Account {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
+    @Column(nullable = false)
     private String name;
     @OneToMany(mappedBy = "account")
     private List<Expense> expenses;
     @OneToMany(mappedBy = "account")
     private List<Income> incomes;
+    @Column(nullable = false)
     private double balance;
 
 }

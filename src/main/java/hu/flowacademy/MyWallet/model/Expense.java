@@ -7,10 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,6 +20,7 @@ public class Expense {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
+    @Column(nullable = false)
     private String name;
     @ManyToOne
     private ExpenseCategory expenseCategory;
@@ -30,6 +28,7 @@ public class Expense {
     @ManyToOne
     @JsonIgnore
     private Account account;
+    @Column(nullable = false)
     private double amount;
     private String description;
 

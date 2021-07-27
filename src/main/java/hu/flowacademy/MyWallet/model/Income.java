@@ -20,6 +20,7 @@ public class Income {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
+    @Column(nullable = false)
     private String name;
     @ManyToOne
     private IncomeCategory incomeCategory;
@@ -27,6 +28,7 @@ public class Income {
     @ManyToOne
     @JsonIgnore
     private Account account;
+    @Column(nullable = false)
     private double amount;
     private String description;
 
