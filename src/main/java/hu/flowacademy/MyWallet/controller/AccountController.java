@@ -4,6 +4,7 @@ import hu.flowacademy.MyWallet.dto.CreateAccountDTO;
 import hu.flowacademy.MyWallet.model.Account;
 import hu.flowacademy.MyWallet.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
+    @Autowired
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
