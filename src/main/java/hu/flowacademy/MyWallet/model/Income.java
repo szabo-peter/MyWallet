@@ -28,6 +28,7 @@ public class Income {
     @JsonIgnore
     private Account account;
     private double amount;
+    private String description;
 
 
 }

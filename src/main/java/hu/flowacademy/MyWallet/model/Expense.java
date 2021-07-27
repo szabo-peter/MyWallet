@@ -31,5 +31,7 @@ public class Expense {
     @JsonIgnore
     private Account account;
     private double amount;
+    private String description;
+
 
 }
