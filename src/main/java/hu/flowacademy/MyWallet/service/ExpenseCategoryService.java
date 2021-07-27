@@ -1,11 +1,13 @@
 package hu.flowacademy.MyWallet.service;
 
+import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.ExpenseCategory;
 import hu.flowacademy.MyWallet.repository.ExpenseCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class ExpenseCategoryService {
     }
 
     public ExpenseCategory createExpenseCategory(String name) {
+        validate(name);
         ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(ExpenseCategory.builder()
                 .name(name)
                 .build());
@@ -33,5 +36,12 @@ public class ExpenseCategoryService {
         List<ExpenseCategory> allExpenseCategory = expenseCategoryRepository.findAll();
         log.info("Found ({}) expenseCategories", allExpenseCategory.size());
         return allExpenseCategory;
+    }
+
+    private void validate(String name) {
+        log.info("Validating ExpenseCategory name.");
+        if(!StringUtils.hasText(name)){
+            throw new ValidationException("Expense Category needs a name!");
+        }
     }
 }
