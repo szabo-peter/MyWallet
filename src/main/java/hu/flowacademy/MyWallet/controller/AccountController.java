@@ -25,13 +25,13 @@ public class AccountController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Account createAccount(@RequestBody CreateAccountDTO createAccountDTO) {
-        log.debug("Creating an account with these params: {}", createAccountDTO);
+        log.info("Creating an account with these params: {}", createAccountDTO);
         return accountService.createAccount(createAccountDTO);
     }
 
     @GetMapping("")
     public List<Account> getAllAccounts() {
-        log.debug("Get all account.");
+        log.info("Get all account.");
         return accountService.getAllAccounts();
     }
 }

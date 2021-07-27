@@ -28,13 +28,13 @@ public class AccountService {
                 .balance(createAccountDTO.getBalance())
                 .build());
 
-        log.debug("Created an account with this id: {}", createdAccount.getId());
+        log.info("Created an account with this id: {}", createdAccount.getId());
         return createdAccount;
     }
 
     public List<Account> getAllAccounts() {
         List<Account> allAccount = accountRepository.findAll();
-        log.debug("Get ({}) account.", allAccount.size());
+        log.info("Found ({}) accounts.", allAccount.size());
         return allAccount;
     }
 }

@@ -24,13 +24,13 @@ public class IncomeCategoryController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public IncomeCategory createIncomeCategory(@RequestParam(name = "name") String name) {
-        log.debug("Creating an IncomeCategory with this name: {}", name);
+        log.info("Creating an IncomeCategory with this name: {}", name);
         return incomeCategoryService.createIncomeCategory(name);
     }
 
     @GetMapping("")
     public List<IncomeCategory> listIncomeCategories() {
-        log.debug("Listing all IncomeCategories.");
+        log.info("Listing all IncomeCategories.");
         return incomeCategoryService.listIncomeCategories();
     }
 

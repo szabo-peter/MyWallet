@@ -42,13 +42,13 @@ public class ExpenseService {
                 .expenseTime(LocalDateTime.now())
                 .amount(createExpenseDTO.getAmount())
                 .build());
-        log.debug("Created an expense with these ID: {}", createdExpense.getId());
+        log.info("Created an expense with these ID: {}", createdExpense.getId());
         return createdExpense;
     }
 
     public List<Expense> listExpenses() {
         List<Expense> allExpenses = expenseRepository.findAll();
-        log.debug("List ({}) expenses.", allExpenses.size());
+        log.info("Found ({}) expenses.", allExpenses.size());
         return allExpenses;
 
     }

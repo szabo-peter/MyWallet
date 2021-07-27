@@ -25,13 +25,13 @@ public class ExpenseController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Expense createExpense(@RequestBody CreateExpenseDTO createExpenseDTO) {
-        log.debug("Creating an Expense with these params: {}", createExpenseDTO);
+        log.info("Creating an Expense with these params: {}", createExpenseDTO);
         return expenseService.createExpense(createExpenseDTO);
     }
 
     @GetMapping("")
     public List<Expense> listExpenses() {
-        log.debug("List all expense.");
+        log.info("Listing all expenses.");
         return expenseService.listExpenses();
     }
 

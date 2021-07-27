@@ -25,13 +25,13 @@ public class IncomeCategoryService {
         IncomeCategory createdIncomeCategory = incomeCategoryRepository.save(IncomeCategory.builder()
                 .name(name)
                 .build());
-        log.debug("Created an IncomeCategory with this id: {}", createdIncomeCategory.getId());
+        log.info("Created an IncomeCategory with this id: {}", createdIncomeCategory.getId());
         return createdIncomeCategory;
     }
 
     public List<IncomeCategory> listIncomeCategories() {
         List<IncomeCategory> allIncomeCategory = incomeCategoryRepository.findAll();
-        log.debug("Found ({}) expenseCategory", allIncomeCategory.size());
+        log.info("Found ({}) expenseCategories", allIncomeCategory.size());
         return allIncomeCategory;
     }
 }

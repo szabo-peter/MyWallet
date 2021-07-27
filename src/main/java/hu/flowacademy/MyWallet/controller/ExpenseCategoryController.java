@@ -25,13 +25,13 @@ public class ExpenseCategoryController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public ExpenseCategory createExpenseCategory(@RequestParam(name = "name") String name) {
-        log.debug("Creating an ExpenseCategory with this name: {}", name);
+        log.info("Creating an ExpenseCategory with this name: {}", name);
         return expenseCategoryService.createExpenseCategory(name);
     }
 
     @GetMapping("")
     public List<ExpenseCategory> listExpenseCategories() {
-        log.debug("Listing all ExpenseCategories.");
+        log.info("Listing all ExpenseCategories.");
         return expenseCategoryService.listExpenseCategories();
     }
 }

@@ -25,13 +25,13 @@ public class ExpenseCategoryService {
         ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(ExpenseCategory.builder()
                 .name(name)
                 .build());
-        log.debug("Created an ExpenseCategory with this id: {}", savedExpenseCategory.getId());
+        log.info("Created an ExpenseCategory with this id: {}", savedExpenseCategory.getId());
         return savedExpenseCategory;
     }
 
     public List<ExpenseCategory> listExpenseCategories() {
         List<ExpenseCategory> allExpenseCategory = expenseCategoryRepository.findAll();
-        log.debug("Found ({}) expenseCategory", allExpenseCategory.size());
+        log.info("Found ({}) expenseCategories", allExpenseCategory.size());
         return allExpenseCategory;
     }
 }

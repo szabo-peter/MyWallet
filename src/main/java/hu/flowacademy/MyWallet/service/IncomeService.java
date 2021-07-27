@@ -42,13 +42,13 @@ public class IncomeService {
                 .incomeTime(LocalDateTime.now())
                 .amount(createIncomeDTO.getAmount())
                 .build());
-        log.debug("Created an income with these ID: {}", createdIncome.getId());
+        log.info("Created an income with these ID: {}", createdIncome.getId());
         return createdIncome;
     }
 
     public List<Income> listIncomes() {
         List<Income> allIncomes = incomeRepository.findAll();
-        log.debug("List ({}) incomes.", allIncomes.size());
+        log.info("Found ({}) incomes.", allIncomes.size());
         return allIncomes;
     }
 }

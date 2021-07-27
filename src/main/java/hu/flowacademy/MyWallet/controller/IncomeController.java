@@ -25,13 +25,13 @@ public class IncomeController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public Income createIncome(@RequestBody CreateIncomeDTO createIncomeDTO) {
-        log.debug("Creating an Income with these params: {}", createIncomeDTO);
+        log.info("Creating an Income with these params: {}", createIncomeDTO);
         return incomeService.createIncome(createIncomeDTO);
     }
 
     @GetMapping("")
     public List<Income> listIncomes() {
-        log.debug("List all incomes.");
+        log.info("Listing all incomes.");
         return incomeService.listIncomes();
     }
 }
