@@ -1,5 +1,6 @@
 package hu.flowacademy.MyWallet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class ExpenseCategory {
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "expenseCategory")
     private List<Expense> expenses;
 }

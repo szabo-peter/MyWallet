@@ -31,7 +31,6 @@ public class IncomeService {
     }
 
     public Income createIncome(CreateIncomeDTO createIncomeDTO) {
-
         Account account = accountRepository.findById(createIncomeDTO.getAccountID()).orElseThrow(() -> new MissingIDException("Didn't find account with this id."));
         accountRepository.save(account.toBuilder().balance(account.getBalance() + createIncomeDTO.getAmount()).build());
         IncomeCategory incomeCategory = incomeCategoryRepository.findById(createIncomeDTO.getIncomeCategoryID()).orElseThrow(() -> new MissingIDException("Didn't find incomeCategory with this id."));
