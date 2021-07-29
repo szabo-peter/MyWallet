@@ -4,6 +4,7 @@ import hu.flowacademy.MyWallet.dto.CreateIncomeDTO;
 import hu.flowacademy.MyWallet.exception.MissingIDException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.Account;
+import hu.flowacademy.MyWallet.model.Currency;
 import hu.flowacademy.MyWallet.model.Income;
 import hu.flowacademy.MyWallet.model.IncomeCategory;
 import hu.flowacademy.MyWallet.repository.AccountRepository;
@@ -22,6 +23,9 @@ import java.util.List;
 @Transactional
 public class IncomeService {
 
+    private static final double EUR_TO_HUF = 357.5;
+    private static final double USD_TO_HUF = 301.0;
+    private static final double EUR_TO_USD = 1.19;
     private final IncomeRepository incomeRepository;
     private final IncomeCategoryRepository incomeCategoryRepository;
     private final AccountRepository accountRepository;
@@ -35,7 +39,7 @@ public class IncomeService {
     public Income createIncome(CreateIncomeDTO createIncomeDTO) {
         validate(createIncomeDTO);
         Account account = accountRepository.findById(createIncomeDTO.getAccountID()).orElseThrow(() -> new MissingIDException("Didn't find account with this id."));
-        accountRepository.save(account.toBuilder().balance(account.getBalance() + createIncomeDTO.getAmount()).build());
+        accountRepository.save(account.toBuilder().balance(account.getBalance() + convertCurrency(createIncomeDTO.getAmount(), account.getCurrency(), createIncomeDTO.getCurrency())).build());
         IncomeCategory incomeCategory = incomeCategoryRepository.findById(createIncomeDTO.getIncomeCategoryID()).orElseThrow(() -> new MissingIDException("Didn't find incomeCategory with this id."));
         Income createdIncome = incomeRepository.save(Income.builder()
                 .name(createIncomeDTO.getName())
@@ -44,6 +48,7 @@ public class IncomeService {
                 .description(createIncomeDTO.getDescription())
                 .incomeTime(LocalDateTime.now())
                 .amount(createIncomeDTO.getAmount())
+                .currency(createIncomeDTO.getCurrency())
                 .build());
         log.info("Created an income with these ID: {}", createdIncome.getId());
         return createdIncome;
@@ -53,6 +58,41 @@ public class IncomeService {
         List<Income> allIncomes = incomeRepository.findAll();
         log.info("Found ({}) incomes.", allIncomes.size());
         return allIncomes;
+    }
+
+    private double convertCurrency(double amount, Currency toCurrency, Currency fromCurrency) {
+        log.info("Converting {} {} to {}.", amount, fromCurrency,toCurrency);
+        if (toCurrency.equals(Currency.HUF)) {
+            switch (fromCurrency) {
+                case EUR:
+                    return amount * EUR_TO_HUF;
+                case USD:
+                    return amount * USD_TO_HUF;
+                case HUF:
+                    return amount;
+            }
+        }
+        else if (toCurrency.equals(Currency.USD)) {
+            switch (fromCurrency) {
+                case EUR:
+                    return amount * EUR_TO_USD;
+                case USD:
+                    return amount;
+                case HUF:
+                    return amount * (1 / USD_TO_HUF);
+            }
+        }
+        else {
+            switch (fromCurrency) {
+                case EUR:
+                    return amount;
+                case USD:
+                    return amount * (1 / EUR_TO_USD);
+                case HUF:
+                    return amount * (1 / EUR_TO_HUF);
+            }
+        }
+        return 0;
     }
 
     private void validate(CreateIncomeDTO createIncomeDTO) {
@@ -68,6 +108,14 @@ public class IncomeService {
         }
         if (createIncomeDTO.getAmount() <= 0) {
             throw new ValidationException("Income amount must be greater than 0!");
+        }
+        if(createIncomeDTO.getCurrency() == null){
+            throw new ValidationException("Income needs a currency!");
+        }
+        if (!createIncomeDTO.getCurrency().equals(Currency.HUF) &&
+                !createIncomeDTO.getCurrency().equals(Currency.EUR) &&
+                !createIncomeDTO.getCurrency().equals(Currency.USD)) {
+            throw new ValidationException("Not valid Currency! (Use only: USD,HUF,EUR)");
         }
     }
 }

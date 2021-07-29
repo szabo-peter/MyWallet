@@ -21,6 +21,9 @@ import java.util.List;
 @Transactional
 public class ExpenseService {
 
+    private static final double EUR_TO_HUF = 357.5;
+    private static final double USD_TO_HUF = 301.0;
+    private static final double EUR_TO_USD = 1.19;
     private final ExpenseRepository expenseRepository;
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final AccountRepository accountRepository;
@@ -35,7 +38,7 @@ public class ExpenseService {
     public Expense createExpense(CreateExpenseDTO createExpenseDTO) {
         validate(createExpenseDTO);
         Account account = accountRepository.findById(createExpenseDTO.getAccountID()).orElseThrow(() -> new MissingIDException("Didn't find account with this id."));
-        accountRepository.save(account.toBuilder().balance(account.getBalance() - createExpenseDTO.getAmount()).build());
+        accountRepository.save(account.toBuilder().balance(account.getBalance() - + convertCurrency(createExpenseDTO.getAmount(), account.getCurrency(), createExpenseDTO.getCurrency())).build());
         ExpenseCategory expenseCategory = expenseCategoryRepository.findById(createExpenseDTO.getExpenseCategoryID()).orElseThrow(() -> new MissingIDException("Didn't find incomeCategory with this id."));
         Expense createdExpense = expenseRepository.save(Expense.builder()
                 .name(createExpenseDTO.getName())
@@ -44,6 +47,7 @@ public class ExpenseService {
                 .description(createExpenseDTO.getDescription())
                 .expenseTime(LocalDateTime.now())
                 .amount(createExpenseDTO.getAmount())
+                .currency(createExpenseDTO.getCurrency())
                 .build());
         log.info("Created an expense with these ID: {}", createdExpense.getId());
         return createdExpense;
@@ -54,6 +58,40 @@ public class ExpenseService {
         log.info("Found ({}) expenses.", allExpenses.size());
         return allExpenses;
 
+    }
+    private double convertCurrency(double amount, Currency toCurrency, Currency fromCurrency) {
+        log.info("Converting {} {} to {}.", amount, fromCurrency,toCurrency);
+        if (toCurrency.equals(Currency.HUF)) {
+            switch (fromCurrency) {
+                case EUR:
+                    return amount * EUR_TO_HUF;
+                case USD:
+                    return amount * USD_TO_HUF;
+                case HUF:
+                    return amount;
+            }
+        }
+        else if (toCurrency.equals(Currency.USD)) {
+            switch (fromCurrency) {
+                case EUR:
+                    return amount * EUR_TO_USD;
+                case USD:
+                    return amount;
+                case HUF:
+                    return amount * (1 / USD_TO_HUF);
+            }
+        }
+        else {
+            switch (fromCurrency) {
+                case EUR:
+                    return amount;
+                case USD:
+                    return amount * (1 / EUR_TO_USD);
+                case HUF:
+                    return amount * (1 / EUR_TO_HUF);
+            }
+        }
+        return 0;
     }
 
     private void validate(CreateExpenseDTO createExpenseDTO) {
@@ -69,6 +107,14 @@ public class ExpenseService {
         }
         if (createExpenseDTO.getAmount() <= 0) {
             throw new ValidationException("Expense amount must be greater than 0!");
+        }
+        if(createExpenseDTO.getCurrency() == null){
+            throw new ValidationException("Expense needs a currency!");
+        }
+        if (!createExpenseDTO.getCurrency().equals(Currency.HUF) &&
+                !createExpenseDTO.getCurrency().equals(Currency.EUR) &&
+                !createExpenseDTO.getCurrency().equals(Currency.USD)) {
+            throw new ValidationException("Not valid Currency! (Use only: USD,HUF,EUR)");
         }
     }
 }

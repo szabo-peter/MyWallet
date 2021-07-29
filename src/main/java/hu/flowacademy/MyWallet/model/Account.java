@@ -27,7 +27,8 @@ public class Account {
     private List<Income> incomes;
     @Column(nullable = false)
     private double balance;
-
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 }
 
 

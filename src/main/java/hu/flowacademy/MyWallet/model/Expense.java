@@ -31,6 +31,8 @@ public class Expense {
     @Column(nullable = false)
     private double amount;
     private String description;
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 
 
 }

@@ -3,6 +3,7 @@ package hu.flowacademy.MyWallet.service;
 import hu.flowacademy.MyWallet.dto.CreateAccountDTO;
 import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.Account;
+import hu.flowacademy.MyWallet.model.Currency;
 import hu.flowacademy.MyWallet.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class AccountService {
         Account createdAccount = accountRepository.save(Account.builder()
                 .name(createAccountDTO.getName())
                 .balance(createAccountDTO.getBalance())
+                .currency(createAccountDTO.getCurrency())
                 .build());
 
         log.info("Created an account with this id: {}", createdAccount.getId());
@@ -48,6 +50,14 @@ public class AccountService {
         }
         if (createAccountDTO.getBalance() <= 0) {
             throw new ValidationException("Account Balance must be greater than 0");
+        }
+        if(createAccountDTO.getCurrency() == null){
+            throw new ValidationException("Account needs a currency!");
+        }
+        if (!createAccountDTO.getCurrency().equals(Currency.HUF) &&
+                !createAccountDTO.getCurrency().equals(Currency.EUR) &&
+                !createAccountDTO.getCurrency().equals(Currency.USD)) {
+            throw new ValidationException("Not valid Currency! (Use only: USD,HUF,EUR)");
         }
     }
 }
