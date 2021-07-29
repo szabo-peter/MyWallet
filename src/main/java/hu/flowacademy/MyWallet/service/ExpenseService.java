@@ -38,7 +38,7 @@ public class ExpenseService {
     public Expense createExpense(CreateExpenseDTO createExpenseDTO) {
         validate(createExpenseDTO);
         Account account = accountRepository.findById(createExpenseDTO.getAccountID()).orElseThrow(() -> new MissingIDException("Didn't find account with this id."));
-        accountRepository.save(account.toBuilder().balance(account.getBalance() - + convertCurrency(createExpenseDTO.getAmount(), account.getCurrency(), createExpenseDTO.getCurrency())).build());
+        accountRepository.save(account.toBuilder().balance(account.getBalance() - +convertCurrency(createExpenseDTO.getAmount(), account.getCurrency(), createExpenseDTO.getCurrency())).build());
         ExpenseCategory expenseCategory = expenseCategoryRepository.findById(createExpenseDTO.getExpenseCategoryID()).orElseThrow(() -> new MissingIDException("Didn't find incomeCategory with this id."));
         Expense createdExpense = expenseRepository.save(Expense.builder()
                 .name(createExpenseDTO.getName())
@@ -59,8 +59,9 @@ public class ExpenseService {
         return allExpenses;
 
     }
+
     private double convertCurrency(double amount, Currency toCurrency, Currency fromCurrency) {
-        log.info("Converting {} {} to {}.", amount, fromCurrency,toCurrency);
+        log.info("Converting {} {} to {}.", amount, fromCurrency, toCurrency);
         if (toCurrency.equals(Currency.HUF)) {
             switch (fromCurrency) {
                 case EUR:
@@ -70,8 +71,7 @@ public class ExpenseService {
                 case HUF:
                     return amount;
             }
-        }
-        else if (toCurrency.equals(Currency.USD)) {
+        } else if (toCurrency.equals(Currency.USD)) {
             switch (fromCurrency) {
                 case EUR:
                     return amount * EUR_TO_USD;
@@ -80,8 +80,7 @@ public class ExpenseService {
                 case HUF:
                     return amount * (1 / USD_TO_HUF);
             }
-        }
-        else {
+        } else {
             switch (fromCurrency) {
                 case EUR:
                     return amount;
@@ -108,7 +107,7 @@ public class ExpenseService {
         if (createExpenseDTO.getAmount() <= 0) {
             throw new ValidationException("Expense amount must be greater than 0!");
         }
-        if(createExpenseDTO.getCurrency() == null){
+        if (createExpenseDTO.getCurrency() == null) {
             throw new ValidationException("Expense needs a currency!");
         }
         if (!createExpenseDTO.getCurrency().equals(Currency.HUF) &&

@@ -51,7 +51,7 @@ public class AccountService {
         if (createAccountDTO.getBalance() <= 0) {
             throw new ValidationException("Account Balance must be greater than 0");
         }
-        if(createAccountDTO.getCurrency() == null){
+        if (createAccountDTO.getCurrency() == null) {
             throw new ValidationException("Account needs a currency!");
         }
         if (!createAccountDTO.getCurrency().equals(Currency.HUF) &&

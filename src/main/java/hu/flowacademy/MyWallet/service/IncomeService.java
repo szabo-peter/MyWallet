@@ -61,7 +61,7 @@ public class IncomeService {
     }
 
     private double convertCurrency(double amount, Currency toCurrency, Currency fromCurrency) {
-        log.info("Converting {} {} to {}.", amount, fromCurrency,toCurrency);
+        log.info("Converting {} {} to {}.", amount, fromCurrency, toCurrency);
         if (toCurrency.equals(Currency.HUF)) {
             switch (fromCurrency) {
                 case EUR:
@@ -71,8 +71,7 @@ public class IncomeService {
                 case HUF:
                     return amount;
             }
-        }
-        else if (toCurrency.equals(Currency.USD)) {
+        } else if (toCurrency.equals(Currency.USD)) {
             switch (fromCurrency) {
                 case EUR:
                     return amount * EUR_TO_USD;
@@ -81,8 +80,7 @@ public class IncomeService {
                 case HUF:
                     return amount * (1 / USD_TO_HUF);
             }
-        }
-        else {
+        } else {
             switch (fromCurrency) {
                 case EUR:
                     return amount;
@@ -109,7 +107,7 @@ public class IncomeService {
         if (createIncomeDTO.getAmount() <= 0) {
             throw new ValidationException("Income amount must be greater than 0!");
         }
-        if(createIncomeDTO.getCurrency() == null){
+        if (createIncomeDTO.getCurrency() == null) {
             throw new ValidationException("Income needs a currency!");
         }
         if (!createIncomeDTO.getCurrency().equals(Currency.HUF) &&
