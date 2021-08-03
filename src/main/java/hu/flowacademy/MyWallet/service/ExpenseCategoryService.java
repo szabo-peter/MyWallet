@@ -40,7 +40,7 @@ public class ExpenseCategoryService {
     }
 
     public ExpenseCategory deleteExpenseCategory(String id) {
-        ExpenseCategory deletedExpenseCategory = expenseCategoryRepository.findById(id).orElseThrow(()-> new MissingIDException("Give a valid Expense Category ID!"));
+        ExpenseCategory deletedExpenseCategory = expenseCategoryRepository.findById(id).orElseThrow(() -> new MissingIDException("Give a valid Expense Category ID!"));
         expenseCategoryRepository.delete(deletedExpenseCategory);
         log.info("Deleted an Expense Category with this ID: {}", id);
         return deletedExpenseCategory;

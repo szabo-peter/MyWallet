@@ -1,5 +1,6 @@
 package hu.flowacademy.MyWallet.controller;
 
+import hu.flowacademy.MyWallet.model.ExpenseCategory;
 import hu.flowacademy.MyWallet.model.IncomeCategory;
 import hu.flowacademy.MyWallet.service.IncomeCategoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +35,10 @@ public class IncomeCategoryController {
         return incomeCategoryService.listIncomeCategories();
     }
 
+    @DeleteMapping("")
+    public IncomeCategory deleteIncomeCategory(@RequestParam(name = "id") String id) {
+        log.info("Delete an IncomeCategory ith this ID: {}", id);
+        return incomeCategoryService.deleteIncomeCategory(id);
+    }
 
 }

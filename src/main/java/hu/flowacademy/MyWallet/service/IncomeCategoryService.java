@@ -1,6 +1,8 @@
 package hu.flowacademy.MyWallet.service;
 
+import hu.flowacademy.MyWallet.exception.MissingIDException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
+import hu.flowacademy.MyWallet.model.ExpenseCategory;
 import hu.flowacademy.MyWallet.model.IncomeCategory;
 import hu.flowacademy.MyWallet.repository.IncomeCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -43,5 +45,12 @@ public class IncomeCategoryService {
         if (!StringUtils.hasText(name)) {
             throw new ValidationException("Income Category needs a name!");
         }
+    }
+
+    public IncomeCategory deleteIncomeCategory(String id) {
+        IncomeCategory deletedIncomeCategory = incomeCategoryRepository.findById(id).orElseThrow(() -> new MissingIDException("Give a valid Income Category ID!"));
+        incomeCategoryRepository.delete(deletedIncomeCategory);
+        log.info("Deleted an Income Category with this ID: {}", id);
+        return deletedIncomeCategory;
     }
 }
