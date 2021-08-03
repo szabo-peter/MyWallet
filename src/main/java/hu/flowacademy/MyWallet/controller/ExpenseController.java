@@ -35,5 +35,10 @@ public class ExpenseController {
         return expenseService.listExpenses();
     }
 
+    @DeleteMapping("")
+    public Expense deleteExpense(@RequestParam(name= "id") String id){
+        log.info("Delete an Expense with this ID: {}", id);
+        return expenseService.deleteExpense(id);
+    }
 
 }

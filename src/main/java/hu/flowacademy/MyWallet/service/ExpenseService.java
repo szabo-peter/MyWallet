@@ -38,7 +38,7 @@ public class ExpenseService {
     public Expense createExpense(CreateExpenseDTO createExpenseDTO) {
         validate(createExpenseDTO);
         Account account = accountRepository.findById(createExpenseDTO.getAccountID()).orElseThrow(() -> new MissingIDException("Didn't find account with this id."));
-        accountRepository.save(account.toBuilder().balance(account.getBalance() - +convertCurrency(createExpenseDTO.getAmount(), account.getCurrency(), createExpenseDTO.getCurrency())).build());
+        accountRepository.save(account.toBuilder().balance(account.getBalance() - convertCurrency(createExpenseDTO.getAmount(), account.getCurrency(), createExpenseDTO.getCurrency())).build());
         ExpenseCategory expenseCategory = expenseCategoryRepository.findById(createExpenseDTO.getExpenseCategoryID()).orElseThrow(() -> new MissingIDException("Didn't find incomeCategory with this id."));
         Expense createdExpense = expenseRepository.save(Expense.builder()
                 .name(createExpenseDTO.getName())
@@ -58,6 +58,15 @@ public class ExpenseService {
         log.info("Found ({}) expenses.", allExpenses.size());
         return allExpenses;
 
+    }
+
+    public Expense deleteExpense(String id) {
+        Expense deletedExpense = expenseRepository.findById(id).orElseThrow(() -> new MissingIDException("Give a valid Expense ID!"));
+        Account account = deletedExpense.getAccount();
+        accountRepository.save(account.toBuilder().balance(account.getBalance() + convertCurrency(deletedExpense.getAmount(), account.getCurrency(), deletedExpense.getCurrency())).build());
+        expenseRepository.delete(deletedExpense);
+        log.info("Deleted an Expense with this ID: {}", id);
+        return deletedExpense;
     }
 
     private double convertCurrency(double amount, Currency toCurrency, Currency fromCurrency) {
