@@ -1,6 +1,7 @@
 package hu.flowacademy.MyWallet.service;
 
 import hu.flowacademy.MyWallet.dto.CreateAccountDTO;
+import hu.flowacademy.MyWallet.exception.MissingIDException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.Account;
 import hu.flowacademy.MyWallet.model.Currency;
@@ -41,6 +42,13 @@ public class AccountService {
         List<Account> allAccount = accountRepository.findAll();
         log.info("Found ({}) accounts.", allAccount.size());
         return allAccount;
+    }
+
+    public Account deleteAccount(String id) {
+        Account deletedAccount = accountRepository.findById(id).orElseThrow(()-> new MissingIDException("Not a valid Account ID!"));
+        accountRepository.delete(deletedAccount);
+        log.info("Account deleted with this id {}",id);
+        return deletedAccount;
     }
 
     private void validate(CreateAccountDTO createAccountDTO) {
