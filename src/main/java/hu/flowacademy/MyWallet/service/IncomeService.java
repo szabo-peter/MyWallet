@@ -3,10 +3,7 @@ package hu.flowacademy.MyWallet.service;
 import hu.flowacademy.MyWallet.dto.CreateIncomeDTO;
 import hu.flowacademy.MyWallet.exception.MissingIDException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
-import hu.flowacademy.MyWallet.model.Account;
-import hu.flowacademy.MyWallet.model.Currency;
-import hu.flowacademy.MyWallet.model.Income;
-import hu.flowacademy.MyWallet.model.IncomeCategory;
+import hu.flowacademy.MyWallet.model.*;
 import hu.flowacademy.MyWallet.repository.AccountRepository;
 import hu.flowacademy.MyWallet.repository.IncomeCategoryRepository;
 import hu.flowacademy.MyWallet.repository.IncomeRepository;
@@ -58,6 +55,15 @@ public class IncomeService {
         List<Income> allIncomes = incomeRepository.findAll();
         log.info("Found ({}) incomes.", allIncomes.size());
         return allIncomes;
+    }
+
+    public Income deleteExpense(String id) {
+        Income deletedIncome = incomeRepository.findById(id).orElseThrow(() -> new MissingIDException("Give a valid Expense ID!"));
+        Account account = deletedIncome.getAccount();
+        accountRepository.save(account.toBuilder().balance(account.getBalance() - convertCurrency(deletedIncome.getAmount(), account.getCurrency(), deletedIncome.getCurrency())).build());
+        incomeRepository.delete(deletedIncome);
+        log.info("Deleted an Income with this ID: {}", id);
+        return deletedIncome;
     }
 
     private double convertCurrency(double amount, Currency toCurrency, Currency fromCurrency) {

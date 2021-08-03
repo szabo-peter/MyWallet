@@ -34,4 +34,10 @@ public class IncomeController {
         log.info("Listing all incomes.");
         return incomeService.listIncomes();
     }
+
+    @DeleteMapping("")
+    public Income deleteIncome(@RequestParam(name= "id") String id){
+        log.info("Delete an Income with this ID: {}", id);
+        return incomeService.deleteExpense(id);
+    }
 }
