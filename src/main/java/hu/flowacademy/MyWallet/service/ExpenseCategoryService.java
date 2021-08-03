@@ -1,5 +1,6 @@
 package hu.flowacademy.MyWallet.service;
 
+import hu.flowacademy.MyWallet.exception.MissingIDException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.ExpenseCategory;
 import hu.flowacademy.MyWallet.repository.ExpenseCategoryRepository;
@@ -36,6 +37,13 @@ public class ExpenseCategoryService {
         List<ExpenseCategory> allExpenseCategory = expenseCategoryRepository.findAll();
         log.info("Found ({}) expenseCategories", allExpenseCategory.size());
         return allExpenseCategory;
+    }
+
+    public ExpenseCategory deleteExpenseCategory(String id) {
+        ExpenseCategory deletedExpenseCategory = expenseCategoryRepository.findById(id).orElseThrow(()-> new MissingIDException("Give a valid Expense Category ID!"));
+        expenseCategoryRepository.delete(deletedExpenseCategory);
+        log.info("Deleted an Expense Category with this ID: {}", id);
+        return deletedExpenseCategory;
     }
 
     private void validate(String name) {

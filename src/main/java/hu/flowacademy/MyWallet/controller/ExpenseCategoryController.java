@@ -34,4 +34,10 @@ public class ExpenseCategoryController {
         log.info("Listing all ExpenseCategories.");
         return expenseCategoryService.listExpenseCategories();
     }
+
+    @DeleteMapping("")
+    public ExpenseCategory deleteExpenseCategory(@RequestParam(name = "id") String id) {
+        log.info("Delete an ExpenseCategory ith this ID: {}", id);
+        return expenseCategoryService.deleteExpenseCategory(id);
+    }
 }

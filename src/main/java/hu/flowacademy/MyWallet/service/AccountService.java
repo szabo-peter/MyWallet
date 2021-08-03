@@ -45,9 +45,9 @@ public class AccountService {
     }
 
     public Account deleteAccount(String id) {
-        Account deletedAccount = accountRepository.findById(id).orElseThrow(()-> new MissingIDException("Not a valid Account ID!"));
+        Account deletedAccount = accountRepository.findById(id).orElseThrow(() -> new MissingIDException("Not a valid Account ID!"));
         accountRepository.delete(deletedAccount);
-        log.info("Account deleted with this id {}",id);
+        log.info("Account deleted with this id {}", id);
         return deletedAccount;
     }
 

@@ -36,8 +36,8 @@ public class AccountController {
     }
 
     @DeleteMapping("")
-    public Account deleteAccount(@RequestParam(name = "id") String id){
-        log.info("Delete an account with this ID: {}",id);
+    public Account deleteAccount(@RequestParam(name = "id") String id) {
+        log.info("Delete an account with this ID: {}", id);
         return accountService.deleteAccount(id);
     }
 }
