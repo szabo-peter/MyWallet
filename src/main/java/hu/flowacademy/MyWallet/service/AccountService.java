@@ -3,6 +3,7 @@ package hu.flowacademy.MyWallet.service;
 import hu.flowacademy.MyWallet.dto.CreateAccountDTO;
 import hu.flowacademy.MyWallet.dto.TransferMoneyDTO;
 import hu.flowacademy.MyWallet.exception.MissingIDException;
+import hu.flowacademy.MyWallet.exception.NotEnoughBalanceException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.Account;
 import hu.flowacademy.MyWallet.model.Currency;
@@ -57,7 +58,7 @@ public class AccountService {
         Account sourceAccount = accountRepository.findById(transferMoneyDTO.getSourceAccountID()).orElseThrow(() -> new MissingIDException("Not a valid SourceAccount ID!"));
         Account destinationAccount = accountRepository.findById(transferMoneyDTO.getDestinationAccountID()).orElseThrow(() -> new MissingIDException("Not a valid DestinationAccount ID!"));
         if (sourceAccount.getBalance() < transferMoneyDTO.getAmount()) {
-            throw new ValidationException("Not enough money in SourceAccount!");
+            throw new NotEnoughBalanceException("Not enough money in SourceAccount!");
         }
         double convertedAmount = CurrencyConverter.convertCurrency(transferMoneyDTO.getAmount(), destinationAccount.getCurrency(), sourceAccount.getCurrency());
         accountRepository.save(sourceAccount.toBuilder().balance(sourceAccount.getBalance() - convertedAmount).build());

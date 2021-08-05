@@ -2,6 +2,7 @@ package hu.flowacademy.MyWallet.service;
 
 import hu.flowacademy.MyWallet.dto.CreateExpenseDTO;
 import hu.flowacademy.MyWallet.exception.MissingIDException;
+import hu.flowacademy.MyWallet.exception.NotEnoughBalanceException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.*;
 import hu.flowacademy.MyWallet.repository.AccountRepository;
@@ -35,6 +36,9 @@ public class ExpenseService {
     public Expense createExpense(CreateExpenseDTO createExpenseDTO) {
         validate(createExpenseDTO);
         Account account = accountRepository.findById(createExpenseDTO.getAccountID()).orElseThrow(() -> new MissingIDException("Didn't find account with this id."));
+        if(account.getBalance()<createExpenseDTO.getAmount()){
+            throw new NotEnoughBalanceException("Not enough balance for this Expense!");
+        }
         accountRepository.save(account.toBuilder().balance(account.getBalance() - CurrencyConverter.convertCurrency(createExpenseDTO.getAmount(), account.getCurrency(), createExpenseDTO.getCurrency())).build());
         ExpenseCategory expenseCategory = expenseCategoryRepository.findById(createExpenseDTO.getExpenseCategoryID()).orElseThrow(() -> new MissingIDException("Didn't find incomeCategory with this id."));
         Expense createdExpense = expenseRepository.save(Expense.builder()

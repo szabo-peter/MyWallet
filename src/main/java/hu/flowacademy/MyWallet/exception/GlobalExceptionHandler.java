@@ -31,6 +31,14 @@ public class GlobalExceptionHandler {
         log.debug("MissingIDException happened: ", missingIDException);
         return List.of(missingIDException.getMessage());
     }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotEnoughBalanceException.class)
+    public List<String> handleNotEnoughBalanceException(
+            NotEnoughBalanceException notEnoughBalanceException
+    ) {
+        log.debug("MissingIDException happened: ", notEnoughBalanceException);
+        return List.of(notEnoughBalanceException.getMessage());
+    }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
