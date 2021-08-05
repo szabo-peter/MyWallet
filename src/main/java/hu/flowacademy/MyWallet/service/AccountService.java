@@ -1,6 +1,7 @@
 package hu.flowacademy.MyWallet.service;
 
 import hu.flowacademy.MyWallet.dto.CreateAccountDTO;
+import hu.flowacademy.MyWallet.dto.TransferMoneyDTO;
 import hu.flowacademy.MyWallet.exception.MissingIDException;
 import hu.flowacademy.MyWallet.exception.ValidationException;
 import hu.flowacademy.MyWallet.model.Account;
@@ -51,13 +52,37 @@ public class AccountService {
         return deletedAccount;
     }
 
+    public void transferMoneyBetweenAccounts(TransferMoneyDTO transferMoneyDTO) {
+        validateTransferMoneyDTO(transferMoneyDTO);
+        Account sourceAccount = accountRepository.findById(transferMoneyDTO.getSourceAccountID()).orElseThrow(() -> new MissingIDException("Not a valid SourceAccount ID!"));
+        Account destinationAccount = accountRepository.findById(transferMoneyDTO.getDestinationAccountID()).orElseThrow(() -> new MissingIDException("Not a valid DestinationAccount ID!"));
+        if (sourceAccount.getBalance() < transferMoneyDTO.getAmount()) {
+            throw new ValidationException("Not enough money in SourceAccount!");
+        }
+        accountRepository.save(sourceAccount.toBuilder().balance(sourceAccount.getBalance() - CurrencyConverter.convertCurrency(transferMoneyDTO.getAmount(), destinationAccount.getCurrency(), sourceAccount.getCurrency())).build());
+        accountRepository.save(destinationAccount.toBuilder().balance(destinationAccount.getBalance() + CurrencyConverter.convertCurrency(transferMoneyDTO.getAmount(), destinationAccount.getCurrency(), sourceAccount.getCurrency())).build());
+    }
+
+    private void validateTransferMoneyDTO(TransferMoneyDTO transferMoneyDTO) {
+        log.info("Validating createAccountDTO.");
+        if (!StringUtils.hasText(transferMoneyDTO.getSourceAccountID())) {
+            throw new ValidationException("Transfer needs a source Account ID!");
+        }
+        if (!StringUtils.hasText(transferMoneyDTO.getDestinationAccountID())) {
+            throw new ValidationException("Transfer needs a destination Account ID!");
+        }
+        if (transferMoneyDTO.getAmount() <= 0) {
+            throw new ValidationException("Transfer amount must be greater than 0!");
+        }
+    }
+
     private void validate(CreateAccountDTO createAccountDTO) {
         log.info("Validating createAccountDTO.");
         if (!StringUtils.hasText(createAccountDTO.getName())) {
             throw new ValidationException("Account needs a name!");
         }
         if (createAccountDTO.getBalance() <= 0) {
-            throw new ValidationException("Account Balance must be greater than 0");
+            throw new ValidationException("Account Balance must be greater than 0!");
         }
         if (createAccountDTO.getCurrency() == null) {
             throw new ValidationException("Account needs a currency!");

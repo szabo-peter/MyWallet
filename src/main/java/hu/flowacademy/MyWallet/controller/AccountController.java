@@ -1,6 +1,7 @@
 package hu.flowacademy.MyWallet.controller;
 
 import hu.flowacademy.MyWallet.dto.CreateAccountDTO;
+import hu.flowacademy.MyWallet.dto.TransferMoneyDTO;
 import hu.flowacademy.MyWallet.model.Account;
 import hu.flowacademy.MyWallet.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,4 +41,11 @@ public class AccountController {
         log.info("Delete an account with this ID: {}", id);
         return accountService.deleteAccount(id);
     }
+
+    @PostMapping("/transfer")
+    public void transferMoneyBetweenAccounts(@RequestBody TransferMoneyDTO transferMoneyDTO){
+        log.info("Transferring money from: {} to this: {} account ID.",transferMoneyDTO.getSourceAccountID(), transferMoneyDTO.getDestinationAccountID());
+        accountService.transferMoneyBetweenAccounts(transferMoneyDTO);
+    }
+
 }

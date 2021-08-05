@@ -20,9 +20,6 @@ import java.util.List;
 @Transactional
 public class IncomeService {
 
-    private static final double EUR_TO_HUF = 357.5;
-    private static final double USD_TO_HUF = 301.0;
-    private static final double EUR_TO_USD = 1.19;
     private final IncomeRepository incomeRepository;
     private final IncomeCategoryRepository incomeCategoryRepository;
     private final AccountRepository accountRepository;
@@ -36,7 +33,7 @@ public class IncomeService {
     public Income createIncome(CreateIncomeDTO createIncomeDTO) {
         validate(createIncomeDTO);
         Account account = accountRepository.findById(createIncomeDTO.getAccountID()).orElseThrow(() -> new MissingIDException("Didn't find account with this id."));
-        accountRepository.save(account.toBuilder().balance(account.getBalance() + convertCurrency(createIncomeDTO.getAmount(), account.getCurrency(), createIncomeDTO.getCurrency())).build());
+        accountRepository.save(account.toBuilder().balance(account.getBalance() + CurrencyConverter.convertCurrency(createIncomeDTO.getAmount(), account.getCurrency(), createIncomeDTO.getCurrency())).build());
         IncomeCategory incomeCategory = incomeCategoryRepository.findById(createIncomeDTO.getIncomeCategoryID()).orElseThrow(() -> new MissingIDException("Didn't find incomeCategory with this id."));
         Income createdIncome = incomeRepository.save(Income.builder()
                 .name(createIncomeDTO.getName())
@@ -60,43 +57,10 @@ public class IncomeService {
     public Income deleteExpense(String id) {
         Income deletedIncome = incomeRepository.findById(id).orElseThrow(() -> new MissingIDException("Give a valid Expense ID!"));
         Account account = deletedIncome.getAccount();
-        accountRepository.save(account.toBuilder().balance(account.getBalance() - convertCurrency(deletedIncome.getAmount(), account.getCurrency(), deletedIncome.getCurrency())).build());
+        accountRepository.save(account.toBuilder().balance(account.getBalance() - CurrencyConverter.convertCurrency(deletedIncome.getAmount(), account.getCurrency(), deletedIncome.getCurrency())).build());
         incomeRepository.delete(deletedIncome);
         log.info("Deleted an Income with this ID: {}", id);
         return deletedIncome;
-    }
-
-    private double convertCurrency(double amount, Currency toCurrency, Currency fromCurrency) {
-        log.info("Converting {} {} to {}.", amount, fromCurrency, toCurrency);
-        if (toCurrency.equals(Currency.HUF)) {
-            switch (fromCurrency) {
-                case EUR:
-                    return amount * EUR_TO_HUF;
-                case USD:
-                    return amount * USD_TO_HUF;
-                case HUF:
-                    return amount;
-            }
-        } else if (toCurrency.equals(Currency.USD)) {
-            switch (fromCurrency) {
-                case EUR:
-                    return amount * EUR_TO_USD;
-                case USD:
-                    return amount;
-                case HUF:
-                    return amount * (1 / USD_TO_HUF);
-            }
-        } else {
-            switch (fromCurrency) {
-                case EUR:
-                    return amount;
-                case USD:
-                    return amount * (1 / EUR_TO_USD);
-                case HUF:
-                    return amount * (1 / EUR_TO_HUF);
-            }
-        }
-        return 0;
     }
 
     private void validate(CreateIncomeDTO createIncomeDTO) {
