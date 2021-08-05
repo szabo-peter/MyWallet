@@ -59,8 +59,9 @@ public class AccountService {
         if (sourceAccount.getBalance() < transferMoneyDTO.getAmount()) {
             throw new ValidationException("Not enough money in SourceAccount!");
         }
-        accountRepository.save(sourceAccount.toBuilder().balance(sourceAccount.getBalance() - CurrencyConverter.convertCurrency(transferMoneyDTO.getAmount(), destinationAccount.getCurrency(), sourceAccount.getCurrency())).build());
-        accountRepository.save(destinationAccount.toBuilder().balance(destinationAccount.getBalance() + CurrencyConverter.convertCurrency(transferMoneyDTO.getAmount(), destinationAccount.getCurrency(), sourceAccount.getCurrency())).build());
+        double convertedAmount = CurrencyConverter.convertCurrency(transferMoneyDTO.getAmount(), destinationAccount.getCurrency(), sourceAccount.getCurrency());
+        accountRepository.save(sourceAccount.toBuilder().balance(sourceAccount.getBalance() - convertedAmount).build());
+        accountRepository.save(destinationAccount.toBuilder().balance(destinationAccount.getBalance() + convertedAmount).build());
     }
 
     private void validateTransferMoneyDTO(TransferMoneyDTO transferMoneyDTO) {
