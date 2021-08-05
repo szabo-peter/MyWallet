@@ -61,7 +61,7 @@ public class AccountService {
             throw new NotEnoughBalanceException("Not enough money in SourceAccount!");
         }
         double convertedAmount = CurrencyConverter.convertCurrency(transferMoneyDTO.getAmount(), destinationAccount.getCurrency(), sourceAccount.getCurrency());
-        accountRepository.save(sourceAccount.toBuilder().balance(sourceAccount.getBalance() - convertedAmount).build());
+        accountRepository.save(sourceAccount.toBuilder().balance(sourceAccount.getBalance() - transferMoneyDTO.getAmount()).build());
         accountRepository.save(destinationAccount.toBuilder().balance(destinationAccount.getBalance() + convertedAmount).build());
     }
 
