@@ -81,15 +81,15 @@ public class InitDataLoader implements CommandLineRunner {
         List<IncomeCategory> incomeCategories = List.of(
                 IncomeCategory.builder()
                         .id(UUID.randomUUID().toString())
-                        .name("Háztartás")
+                        .name("Fizetés")
                         .build(),
                 IncomeCategory.builder()
                         .id(UUID.randomUUID().toString())
-                        .name("Bank")
+                        .name("Egyéb bevétel")
                         .build(),
                 IncomeCategory.builder()
                         .id(UUID.randomUUID().toString())
-                        .name("Élelmiszer")
+                        .name("Jóváírás")
                         .build()
         );
         log.info("Created ({}) IncomeCategories.", incomeCategories.size());
